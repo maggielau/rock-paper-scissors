@@ -1,3 +1,12 @@
+let playerScore = 0;
+let computerScore = 0;
+let finalResult;
+
+const results = document.querySelector('.results');
+const runningScore = document.querySelector('.runningScore');
+const winner = document.querySelector('.winner');
+
+
 function computerPlay () {
     let compMove = (Math.floor(Math.random()*3));
 
@@ -18,27 +27,48 @@ function playRound (playerSelection, computerSelection) {
     let result;
 
     if (playerSelection === computerSelection) {
-        result = "Tie! Play again!";
+        results.textContent = "Tie! Play again!";
     }
     else if ((playerSelection === "Rock" && computerSelection === "Paper") || (playerSelection === "Paper" && computerSelection === "Scissors") || 
         (playerSelection === "Scissors" && computerSelection === "Rock")) {
-        result=`You lose! ${computerSelection} beats ${playerSelection}`;
+        results.textContent =`You lose! ${computerSelection} beats ${playerSelection}`;
+        computerScore++;
     }
     else {
-        result= `You win! ${playerSelection} beats ${computerSelection}`;
+        results.textContent = `You win! ${playerSelection} beats ${computerSelection}`;
+        playerScore++;
     }
 
-    return result;
+    return;
+
+}
+
+function makeSelection (e) {
+    let playerSelection = this.id;
+    let computerSelection = computerPlay();
+
+    playRound(playerSelection, computerSelection);
+    runningScore.textContent = `Your Score: ${playerScore}, Computer Score: ${computerScore}`;
+
+    if (playerScore == 5) {
+        alert("Hooray, you won! Game over.");
+        playerScore = 0;
+        computerScore = 0;
+    }
+    else if (computerScore == 5) {
+        alert("Too bad, computer won! Game over.");
+        playerScore = 0;
+        computerScore = 0;      
+    }
 
 }
 
 function game () {
-    for (i=0; i<5; i++){
-        let playerSelection = window.prompt("Enter your selection", "");
-        computerSelection = computerPlay();
 
-        console.log(playRound(playerSelection, computerSelection));
-    }
+    const buttons = Array.from(document.querySelectorAll('.choice'));
+    buttons.forEach(button => button.addEventListener('click', makeSelection));
+
+
 }
 
 game();
